@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
@@ -7,13 +8,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { UserIcon } from "lucide-react";
+import { useQuery } from "convex/react";
+import { HouseIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CreateServer } from "./create-server";
 import { api } from "../../../convex/_generated/api";
-import { useQuery } from "convex/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CreateServer } from "./create-server";
 
 export function MainSidebar() {
   const servers = useQuery(api.functions.server.list);
@@ -24,6 +24,17 @@ export function MainSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Home Page"
+                  asChild
+                  isActive={pathname.startsWith("/home")}
+                >
+                  <Link href="/home">
+                    <HouseIcon />
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   tooltip="Direct Messages"

@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Chatstarter",
+  title: "trAIner",
   description: "Your new favorite social media app",
 };
 

@@ -82,10 +82,8 @@ export function Onboarding() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Onboarding</DialogTitle>
-          <DialogDescription>
-            Please fill out your onboarding information.
-          </DialogDescription>
+          <DialogTitle>Welcome to trAIner</DialogTitle>
+          <DialogDescription>Tell us about yourself.</DialogDescription>
         </DialogHeader>
         <form className="contents" onSubmit={handleSubmit}>
           {/* Sex */}

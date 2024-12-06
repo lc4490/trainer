@@ -19,13 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { useImageUpload } from "@/hooks/use-image-upload";
+import { SignOutButton } from "@clerk/nextjs";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation, useQuery } from "convex/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
-import { useImageUpload } from "@/hooks/use-image-upload";
 
 export function ProfilePage() {
   const user = useQuery(api.functions.user.get);
@@ -33,7 +33,6 @@ export function ProfilePage() {
   const imageUpload = useImageUpload();
   const addProfilePic = useMutation(api.functions.user.addProfilePicture);
   const [open, setOpen] = useState(false);
-  console.log(user?.image);
 
   useEffect(() => {
     setFormData({

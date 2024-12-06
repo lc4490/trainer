@@ -10,7 +10,6 @@ import { ProfilePage } from "./_components/profile-page";
 export default function HomePage() {
   const user = useQuery(api.functions.user.get);
   const [open, setOpen] = useState(false);
-  const [openProfile, setOpenProfile] = useState(false);
 
   useEffect(() => {
     if (user && (user.age == null || user.age == "") && !open) {

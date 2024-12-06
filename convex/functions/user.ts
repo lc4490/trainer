@@ -6,6 +6,7 @@ import {
   QueryCtx,
 } from "../_generated/server";
 import { v } from "convex/values";
+import { authenticatedMutation } from "./helpers";
 
 export const get = query({
   handler: async (ctx) => {
@@ -43,6 +44,37 @@ export const remove = internalMutation({
     if (user) {
       await ctx.db.delete(user._id);
     }
+  },
+});
+
+export const onboard = authenticatedMutation({
+  args: {
+    activityLevel: v.optional(v.string()),
+    age: v.optional(v.string()),
+    availability: v.optional(v.array(v.string())),
+    fitnessGoals: v.optional(v.string()),
+    healthIssues: v.optional(v.string()),
+    height: v.optional(v.string()),
+    sex: v.optional(v.string()),
+    weight: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    // Get the current user
+    const currentUser = await getCurrentUser(ctx);
+    if (!currentUser) {
+      throw new Error("User not found or not authenticated");
+    }
+
+    await ctx.db.patch(currentUser._id, {
+      activity: args.activityLevel || currentUser.activity,
+      age: args.age ?? currentUser.age,
+      availability: args.availability || currentUser.availability,
+      goals: args.fitnessGoals || currentUser.goals,
+      issues: args.healthIssues || currentUser.issues,
+      height: args.height ?? currentUser.height,
+      sex: args.sex || currentUser.sex,
+      weight: args.weight ?? currentUser.weight,
+    });
   },
 });
 

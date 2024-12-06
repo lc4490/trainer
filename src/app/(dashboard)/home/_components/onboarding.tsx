@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useMutation } from "convex/react";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -20,10 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { useMutation, useQuery } from "convex/react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { api } from "../../../../../convex/_generated/api";
 
-export function Onboarding() {
+export function Onboarding({ onClose }: { onClose: () => void }) {
   const [open, setOpen] = useState(true);
+  const user = useQuery(api.functions.user.get);
+  const onboard = useMutation(api.functions.user.onboard);
   const [formData, setFormData] = useState<{
     sex: string;
     age: string;
@@ -31,26 +34,45 @@ export function Onboarding() {
     height: string;
     activityLevel: string;
     fitnessGoals: string;
-    healthIssues: string[];
+    healthIssues: string;
     availability: string[];
   }>({
-    sex: "",
-    age: "",
-    weight: "",
-    height: "",
-    activityLevel: "",
-    fitnessGoals: "",
-    healthIssues: [],
-    availability: [],
+    sex: user?.sex || "",
+    age: user?.age || "",
+    weight: user?.weight || "",
+    height: user?.height || "",
+    activityLevel: user?.activity || "",
+    fitnessGoals: user?.goals || "",
+    healthIssues: user?.issues || "",
+    availability: user?.availability || [],
   });
+
+  const createOnboarding = async (formData: {
+    sex?: string | undefined;
+    age?: string | undefined;
+    weight?: string | undefined;
+    height?: string | undefined;
+    availability?: Array<string> | undefined;
+    activityLevel?: string | undefined;
+    fitnessGoals?: string | undefined;
+    healthIssues?: string | undefined;
+  }) => {
+    try {
+      await onboard(formData);
+    } catch (error) {
+      toast.error("Failed to onboard", {
+        description:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    }
+  };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     try {
-      // Uncomment when using a mutation
-      // await createOnboarding(formData);
+      await createOnboarding(formData);
       toast.success("Onboarding completed successfully!");
-      console.log(formData);
+      onClose();
       setOpen(false);
     } catch (error) {
       toast.error("Failed to create onboarding", {
@@ -79,7 +101,7 @@ export function Onboarding() {
   //   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={true} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Welcome to trAIner</DialogTitle>
@@ -206,38 +228,32 @@ export function Onboarding() {
           {/* Availability */}
           <div className="flex flex-col gap-1">
             <Label htmlFor="availability">
-              What days are you available for tracking?
+              What days are you available to work out?
             </Label>
-            <Select
-              value="" // Set to empty since multiple selections won't display as a single string
-              onValueChange={(value) => {
-                setFormData((prev) => {
-                  const updatedAvailability = prev.availability.includes(value)
-                    ? prev.availability.filter((day) => day !== value) // Remove if already selected
-                    : [...prev.availability, value]; // Add if not selected
-                  return { ...prev, availability: updatedAvailability };
-                });
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue
-                  placeholder={
-                    formData.availability.length > 0
-                      ? formData.availability.join(", ")
-                      : "Select availability"
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Monday">Monday</SelectItem>
-                <SelectItem value="Tuesday">Tuesday</SelectItem>
-                <SelectItem value="Wednesday">Wednesday</SelectItem>
-                <SelectItem value="Thursday">Thursday</SelectItem>
-                <SelectItem value="Friday">Friday</SelectItem>
-                <SelectItem value="Saturday">Saturday</SelectItem>
-                <SelectItem value="Sunday">Sunday</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-wrap gap-4">
+              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                <div key={day} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id={day}
+                    name="availability"
+                    value={day}
+                    checked={formData.availability.includes(day)}
+                    onChange={(event) => {
+                      const { value, checked } = event.target;
+                      setFormData((prev) => {
+                        const updatedAvailability = checked
+                          ? [...prev.availability, value] // Add day if checked
+                          : prev.availability.filter((d) => d !== value); // Remove day if unchecked
+                        return { ...prev, availability: updatedAvailability };
+                      });
+                    }}
+                    className="checkbox" // Optional: Tailwind class for styling
+                  />
+                  <Label htmlFor={day}>{day}</Label>
+                </div>
+              ))}
+            </div>
           </div>
 
           <DialogFooter>

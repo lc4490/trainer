@@ -6,6 +6,14 @@ export default defineSchema({
     username: v.string(),
     image: v.string(),
     clerkId: v.string(),
+    sex: v.optional(v.string()),
+    age: v.optional(v.string()),
+    weight: v.optional(v.string()),
+    height: v.optional(v.string()),
+    activity: v.optional(v.string()),
+    goals: v.optional(v.string()),
+    issues: v.optional(v.string()),
+    availability: v.optional(v.array(v.string())),
   })
     .index("by_clerk_id", ["clerkId"])
     .index("by_username", ["username"]),

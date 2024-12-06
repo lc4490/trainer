@@ -1,21 +1,25 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useQuery } from "convex/react";
 import { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { Onboarding } from "./_components/onboarding";
-import { SignOut } from "./_components/sign-out-button";
+
+import { ProfilePage } from "./_components/profile-page";
 
 export default function HomePage() {
   const user = useQuery(api.functions.user.get);
   const [open, setOpen] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
 
   useEffect(() => {
-    if (user && user.age == null && !open) {
+    if (user && (user.age == null || user.age == "") && !open) {
       setOpen(true);
     }
-  }, [user, open]);
+  }, [
+    user,
+    // open
+  ]);
 
   if (user == null) {
     return <div></div>;
@@ -23,20 +27,9 @@ export default function HomePage() {
 
   return (
     <div className="flex-1 flex-col flex-divide-y">
-      <header className="flex items-center justify-between p-4">
+      <header className="flex item-center justify-between p-4">
         <h1 className="font-semibold">Welcome, {user?.username}</h1>
-        <div className="flex items-center gap-4">
-          {/* Edit Profile */}
-          <Button
-            size="sm"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Edit Profile
-          </Button>
-          <SignOut />
-        </div>
+        <ProfilePage />
       </header>
       {open && (
         <Onboarding

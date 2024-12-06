@@ -63,7 +63,10 @@ export function DMSidebar() {
                   >
                     <Link href={`/dms/${directMessage._id}`}>
                       <Avatar className="size-6">
-                        <AvatarImage src={directMessage.user.image} />
+                        <AvatarImage
+                          src={directMessage.user.image}
+                          className="w-full h-full object-cover"
+                        />
                         <AvatarFallback>
                           {directMessage.user.username[0]}
                         </AvatarFallback>
@@ -88,7 +91,10 @@ export function DMSidebar() {
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuButton className="flex items-center">
                       <Avatar className="size-6">
-                        <AvatarImage src={user.image} />
+                        <AvatarImage
+                          src={user.image}
+                          className="w-full h-full object-cover"
+                        />
                         <AvatarFallback>{user.username[0]}</AvatarFallback>
                       </Avatar>
                       <p>{user.username}</p>

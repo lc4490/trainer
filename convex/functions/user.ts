@@ -78,6 +78,27 @@ export const onboard = authenticatedMutation({
   },
 });
 
+export const addProfilePicture = authenticatedMutation({
+  args: {
+    profilePicture: v.optional(v.id("_storage")),
+  },
+  handler: async (ctx, args) => {
+    // Get the current user
+    const currentUser = await getCurrentUser(ctx);
+    if (!currentUser) {
+      throw new Error("User not found or not authenticated");
+    }
+
+    const profilePic = args.profilePicture
+      ? await ctx.storage.getUrl(args.profilePicture)
+      : undefined;
+    console.log(profilePic);
+    await ctx.db.patch(currentUser._id, {
+      image: profilePic || currentUser.image,
+    });
+  },
+});
+
 export const getCurrentUser = async (ctx: QueryCtx | MutationCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {

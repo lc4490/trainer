@@ -158,7 +158,7 @@ function FriendItem({
     <div className="flex items-center justify-between p-2.5 gap-2.5">
       <div className="flex gap-2 5">
         <Avatar className="size-9 border">
-          <AvatarImage src={image} />
+          <AvatarImage src={image} className="w-full h-full object-cover" />
           <AvatarFallback />
         </Avatar>
         <p className="text-sm font-medium">{username}</p>

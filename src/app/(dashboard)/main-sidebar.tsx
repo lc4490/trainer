@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useQuery } from "convex/react";
-import { HouseIcon, UserIcon } from "lucide-react";
+import { DumbbellIcon, HouseIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
@@ -32,6 +32,17 @@ export function MainSidebar() {
                 >
                   <Link href="/home">
                     <HouseIcon />
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Equipment Page"
+                  asChild
+                  isActive={pathname.startsWith("/equipment")}
+                >
+                  <Link href="/equipment">
+                    <DumbbellIcon />
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

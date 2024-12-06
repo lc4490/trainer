@@ -1,13 +1,14 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,14 +19,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation, useQuery } from "convex/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
+import { useImageUpload } from "@/hooks/use-image-upload";
 
-export function Onboarding({ onClose }: { onClose: () => void }) {
+export function ProfilePage() {
   const user = useQuery(api.functions.user.get);
   const onboard = useMutation(api.functions.user.onboard);
+  const imageUpload = useImageUpload();
+  const addProfilePic = useMutation(api.functions.user.addProfilePicture);
+  const [open, setOpen] = useState(false);
+  console.log(user?.image);
+
+  useEffect(() => {
+    setFormData({
+      sex: user?.sex || "",
+      age: user?.age || "",
+      weight: user?.weight || "",
+      height: user?.height || "",
+      activityLevel: user?.activity || "",
+      fitnessGoals: user?.goals || "",
+      healthIssues: user?.issues || "",
+      availability: user?.availability || [],
+    });
+    imageUpload.reset();
+  }, [open]);
+
   const [formData, setFormData] = useState<{
     sex: string;
     age: string;
@@ -58,7 +81,6 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
   }) => {
     try {
       await onboard(formData);
-      toast.success("Onboarding completed successfully!");
     } catch (error) {
       toast.error("Failed to onboard", {
         description:
@@ -71,7 +93,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     event.preventDefault();
     try {
       await createOnboarding(formData);
-      onClose();
+      await addProfilePic({ profilePicture: imageUpload.storageId });
+      imageUpload.reset();
+      setOpen(false);
+      toast.success("Updated successfully!");
     } catch (error) {
       toast.error("Failed to create onboarding", {
         description:
@@ -87,29 +112,56 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
       [name]: value, // Always keep the value as a string
     }));
   };
+
   const handleSelectChange = (
     field: keyof typeof formData,
     value: string | string[]
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
-  //   const toggleHealthIssues = (value: string) => {
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       healthIssues: prev.healthIssues.includes(value)
-  //         ? prev.healthIssues.filter((issue) => issue !== value)
-  //         : [...prev.healthIssues, value],
-  //     }));
-  //   };
-
   return (
-    <Dialog open={true} onOpenChange={(isOpen) => !isOpen && onClose()}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="icon" variant="ghost">
+          <Avatar className="size-12 rounded-full overflow-hidden">
+            <AvatarImage
+              src={user?.image}
+              className="w-full h-full object-cover"
+            />
+            <AvatarFallback>{user?.username[0]}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Welcome to trAIner</DialogTitle>
-          <DialogDescription>Tell us about yourself.</DialogDescription>
+          <DialogTitle>Edit Profile</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <form className="contents" onSubmit={handleSubmit}>
+          <div className="flex flex-row justify-center p-2">
+            <Button
+              type="button"
+              size="icon"
+              className="p-5"
+              onClick={() => {
+                imageUpload.open();
+              }}
+            >
+              <Avatar className="w-20 h-20 rounded-full overflow-hidden">
+                <AvatarImage
+                  src={
+                    imageUpload.previewUrl
+                      ? imageUpload.previewUrl
+                      : user?.image
+                  }
+                  className="w-full h-full object-cover"
+                />
+                <AvatarFallback>{user?.username[0]}</AvatarFallback>
+              </Avatar>
+            </Button>
+            <input {...imageUpload.inputProps} />
+          </div>
+
           {/* Sex */}
           <div className="flex flex-col gap-1">
             <Label htmlFor="sex">Sex</Label>
@@ -259,6 +311,11 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
           </div>
 
           <DialogFooter>
+            <SignOutButton>
+              <Button type="button" variant="outline">
+                Sign Out
+              </Button>
+            </SignOutButton>
             <Button type="submit">Submit</Button>
           </DialogFooter>
         </form>

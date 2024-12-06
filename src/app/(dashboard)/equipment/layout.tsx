@@ -1,6 +1,6 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 
-export default function HomeLayout({
+export default function EquipmentLayout({
   children,
 }: {
   children: React.ReactNode;

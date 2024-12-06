@@ -24,7 +24,6 @@ import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
 
 export function Onboarding({ onClose }: { onClose: () => void }) {
-  const [open, setOpen] = useState(true);
   const user = useQuery(api.functions.user.get);
   const onboard = useMutation(api.functions.user.onboard);
   const [formData, setFormData] = useState<{
@@ -73,7 +72,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
       await createOnboarding(formData);
       toast.success("Onboarding completed successfully!");
       onClose();
-      setOpen(false);
+      // setOpen(false);
     } catch (error) {
       toast.error("Failed to create onboarding", {
         description:

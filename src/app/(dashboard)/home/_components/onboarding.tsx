@@ -66,13 +66,12 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     }
   };
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await createOnboarding(formData);
       toast.success("Onboarding completed successfully!");
       onClose();
-      // setOpen(false);
     } catch (error) {
       toast.error("Failed to create onboarding", {
         description:
@@ -81,15 +80,22 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     }
   };
 
-  const handleInputChange = (event: { target: { name: any; value: any } }) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "age" || name === "weight" || name === "height"
+          ? Number(value)
+          : value, // Convert to number where necessary
+    }));
   };
-
-  const handleSelectChange = (field: string, value: string | string[]) => {
+  const handleSelectChange = (
+    field: keyof typeof formData,
+    value: string | string[]
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
-
   //   const toggleHealthIssues = (value: string) => {
   //     setFormData((prev) => ({
   //       ...prev,

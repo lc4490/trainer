@@ -315,7 +315,9 @@ export function ProfilePage() {
                 Sign Out
               </Button>
             </SignOutButton>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={imageUpload.isUploading}>
+              Submit
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

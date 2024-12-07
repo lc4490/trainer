@@ -1,14 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -84,7 +76,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     const { name, value } = event.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value, // Always keep the value as a string
+      [name]: value,
     }));
   };
   const handleSelectChange = (
@@ -93,23 +85,11 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
-  //   const toggleHealthIssues = (value: string) => {
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       healthIssues: prev.healthIssues.includes(value)
-  //         ? prev.healthIssues.filter((issue) => issue !== value)
-  //         : [...prev.healthIssues, value],
-  //     }));
-  //   };
 
   return (
-    <Dialog open={true} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Welcome to trAIner</DialogTitle>
-          <DialogDescription>Tell us about yourself.</DialogDescription>
-        </DialogHeader>
-        <form className="contents" onSubmit={handleSubmit}>
+    <div className="flex justify-center p-2">
+      <form className="" onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-2">
           {/* Sex */}
           <div className="flex flex-col gap-1">
             <Label htmlFor="sex">Sex</Label>
@@ -220,9 +200,9 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
             <Label htmlFor="health-issues">Pre-existing Health Issues</Label>
             <Input
               id="health-issues"
-              name="healthIssues" // Match the name with the key in formData
-              value={formData.healthIssues} // Bind the value to formData.healthIssues
-              onChange={handleInputChange} // Use handleInputChange for state updates
+              name="healthIssues"
+              value={formData.healthIssues}
+              onChange={handleInputChange}
               placeholder="Enter any health issues or type 'None'"
             />
           </div>
@@ -245,24 +225,24 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                       const { value, checked } = event.target;
                       setFormData((prev) => {
                         const updatedAvailability = checked
-                          ? [...prev.availability, value] // Add day if checked
-                          : prev.availability.filter((d) => d !== value); // Remove day if unchecked
+                          ? [...prev.availability, value]
+                          : prev.availability.filter((d) => d !== value);
                         return { ...prev, availability: updatedAvailability };
                       });
                     }}
-                    className="checkbox" // Optional: Tailwind class for styling
+                    className="checkbox"
                   />
                   <Label htmlFor={day}>{day}</Label>
                 </div>
               ))}
             </div>
           </div>
+        </div>
 
-          <DialogFooter>
-            <Button type="submit">Submit</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+        <div className="mt-6">
+          <Button type="submit">Submit</Button>
+        </div>
+      </form>
+    </div>
   );
 }

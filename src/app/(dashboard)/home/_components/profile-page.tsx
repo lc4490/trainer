@@ -33,6 +33,7 @@ export function ProfilePage() {
   const imageUpload = useImageUpload();
   const addProfilePic = useMutation(api.functions.user.addProfilePicture);
   const [open, setOpen] = useState(false);
+  const removeAttachment = useMutation(api.functions.storage.remove);
 
   useEffect(() => {
     setFormData({
@@ -45,6 +46,11 @@ export function ProfilePage() {
       healthIssues: user?.issues || "",
       availability: user?.availability || [],
     });
+    if (imageUpload.storageId) {
+      removeAttachment({
+        storageId: imageUpload.storageId,
+      });
+    }
     imageUpload.reset();
   }, [open]);
 

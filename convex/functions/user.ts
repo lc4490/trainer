@@ -92,9 +92,12 @@ export const addProfilePicture = authenticatedMutation({
     const profilePic = args.profilePicture
       ? await ctx.storage.getUrl(args.profilePicture)
       : undefined;
-    console.log(profilePic);
+    if (currentUser.profilePic) {
+      ctx.storage.delete(currentUser.profilePic);
+    }
     await ctx.db.patch(currentUser._id, {
       image: profilePic || currentUser.image,
+      profilePic: args.profilePicture,
     });
   },
 });

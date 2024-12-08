@@ -14,6 +14,7 @@ export default defineSchema({
     goals: v.optional(v.string()),
     issues: v.optional(v.string()),
     availability: v.optional(v.array(v.string())),
+    profilePic: v.optional(v.id("_storage")),
   })
     .index("by_clerk_id", ["clerkId"])
     .index("by_username", ["username"]),

@@ -3,9 +3,9 @@
 import { useQuery } from "convex/react";
 import { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
-import { Onboarding } from "./_components/onboarding";
+import Onboarding from "./_components/onboarding2";
 
-import { ProfilePage } from "./_components/profile-page";
+import { ProfilePage } from "./_components/edit-profile-page";
 
 export default function HomePage() {
   const user = useQuery(api.functions.user.get);

@@ -17,7 +17,11 @@ import { CreateServer } from "./create-server";
 
 export function MainSidebar() {
   const servers = useQuery(api.functions.server.list);
+  const user = useQuery(api.functions.user.get);
   const pathname = usePathname();
+  if (!user || user.age === undefined) {
+    return <div></div>;
+  }
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>

@@ -77,23 +77,27 @@ export function MainSidebar() {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              {servers?.map((server) => (
-                <SidebarMenuItem key={server._id}>
-                  <SidebarMenuButton
-                    className="group-data-[collapsible=icon]:!p-0"
-                    tooltip={server.name}
-                  >
-                    <Link
-                      href={`/servers/${server._id}/channels/${server.defaultChannelId}`}
+              {servers
+                ?.filter((server) => server._id !== user?.server)
+                .map((server) => (
+                  <SidebarMenuItem key={server._id}>
+                    <SidebarMenuButton
+                      className="group-data-[collapsible=icon]:!p-0"
+                      tooltip={server.name}
                     >
-                      <Avatar className="rounded-none">
-                        {server.iconUrl && <AvatarImage src={server.iconUrl} />}
-                        <AvatarFallback>{server.name[0]}</AvatarFallback>
-                      </Avatar>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                      <Link
+                        href={`/servers/${server._id}/channels/${server.defaultChannelId}`}
+                      >
+                        <Avatar className="rounded-none">
+                          {server.iconUrl && (
+                            <AvatarImage src={server.iconUrl} />
+                          )}
+                          <AvatarFallback>{server.name[0]}</AvatarFallback>
+                        </Avatar>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
               <SidebarMenuItem>
                 <CreateServer />
               </SidebarMenuItem>

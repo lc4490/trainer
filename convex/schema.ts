@@ -15,6 +15,7 @@ export default defineSchema({
     issues: v.optional(v.string()),
     availability: v.optional(v.array(v.string())),
     profilePic: v.optional(v.id("_storage")),
+    server: v.optional(v.id("servers")),
   })
     .index("by_clerk_id", ["clerkId"])
     .index("by_username", ["username"]),

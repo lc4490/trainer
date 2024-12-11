@@ -23,6 +23,8 @@ export default function Onboarding({ onClose }: { onClose: () => void }) {
     healthIssues: "",
     availability: [],
   });
+  const createServer = useMutation(api.functions.server.create);
+  const setServer = useMutation(api.functions.user.setServer);
 
   const steps: JSX.Element[] = [
     <Step1 key="step1" formData={formData} setFormData={setFormData} />,
@@ -43,6 +45,11 @@ export default function Onboarding({ onClose }: { onClose: () => void }) {
   }) => {
     try {
       await onboard(formData);
+      const { serverId, defaultChannelId } = await createServer({
+        name: "trAIner",
+      });
+      await setServer({ server: serverId });
+
       toast.success("Onboarding completed successfully!");
     } catch (error) {
       toast.error("Failed to onboard", {

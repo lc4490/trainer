@@ -102,6 +102,23 @@ export const addProfilePicture = authenticatedMutation({
   },
 });
 
+export const setServer = authenticatedMutation({
+  args: {
+    server: v.optional(v.id("servers")),
+  },
+  handler: async (ctx, args) => {
+    // Get the current user
+    const currentUser = await getCurrentUser(ctx);
+    if (!currentUser) {
+      throw new Error("User not found or not authenticated");
+    }
+
+    await ctx.db.patch(currentUser._id, {
+      server: args.server || currentUser.server,
+    });
+  },
+});
+
 export const getCurrentUser = async (ctx: QueryCtx | MutationCtx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {

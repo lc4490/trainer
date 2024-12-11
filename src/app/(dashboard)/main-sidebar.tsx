@@ -9,7 +9,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useQuery } from "convex/react";
-import { DumbbellIcon, HouseIcon, UserIcon } from "lucide-react";
+import {
+  BotMessageSquare,
+  DumbbellIcon,
+  HouseIcon,
+  UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
@@ -47,6 +52,17 @@ export function MainSidebar() {
                 >
                   <Link href="/equipment">
                     <DumbbellIcon />
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Chat with trainer"
+                  asChild
+                  isActive={pathname.startsWith("/chat")}
+                >
+                  <Link href="/chat">
+                    <BotMessageSquare />
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

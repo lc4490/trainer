@@ -45,7 +45,7 @@ export default function Onboarding({ onClose }: { onClose: () => void }) {
   }) => {
     try {
       await onboard(formData);
-      const { serverId, defaultChannelId } = await createServer({
+      const { serverId } = await createServer({
         name: "trAIner",
       });
       await setServer({ server: serverId });

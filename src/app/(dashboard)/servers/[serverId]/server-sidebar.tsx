@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -127,11 +129,13 @@ export function ServerSidebar({ id }: { id: Id<"servers"> }) {
                       {channel.name}
                     </Link>
                   </SidebarMenuButton>
-                  <SidebarMenuAction
-                    onClick={() => handleChannelDelete(channel._id)}
-                  >
-                    <TrashIcon />
-                  </SidebarMenuAction>
+                  {server?.defaultChannelId !== channel._id && (
+                    <SidebarMenuAction
+                      onClick={() => handleChannelDelete(channel._id)}
+                    >
+                      <TrashIcon />
+                    </SidebarMenuAction>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

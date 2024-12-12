@@ -1,7 +1,8 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import { Id } from "../../../../../convex/_generated/dataModel";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,16 +13,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useMutation } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { SidebarGroupAction } from "@/components/ui/sidebar";
+import { useMutation } from "convex/react";
 import { PlusIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 
-export function CreateChannel({ serverId }: { serverId: Id<"servers"> }) {
+export function CreateChat({ serverId }: { serverId: Id<"servers"> }) {
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -31,7 +32,7 @@ export function CreateChannel({ serverId }: { serverId: Id<"servers"> }) {
     event.preventDefault();
     try {
       const channelId = await createChannel({ name, serverId });
-      router.push(`/servers/${serverId}/channels/${channelId}`);
+      router.push(`/chat/${channelId}`);
       toast.success("Channel created");
       setOpen(false);
     } catch (error) {
@@ -50,10 +51,8 @@ export function CreateChannel({ serverId }: { serverId: Id<"servers"> }) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Channel</DialogTitle>
-          <DialogDescription>
-            Enter a name to create a channel.
-          </DialogDescription>
+          <DialogTitle>Create Chat</DialogTitle>
+          <DialogDescription>Enter a chat name.</DialogDescription>
         </DialogHeader>
         <form className="contents" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
@@ -66,7 +65,7 @@ export function CreateChannel({ serverId }: { serverId: Id<"servers"> }) {
             />
           </div>
           <DialogFooter>
-            <Button>Create Channel</Button>
+            <Button>Create Chat</Button>
           </DialogFooter>
         </form>
       </DialogContent>

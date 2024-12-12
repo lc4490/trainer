@@ -184,19 +184,3 @@ export const leave = authenticatedMutation({
     await ctx.db.delete(serverMember._id);
   },
 });
-
-export const getDefaultChannel = authenticatedQuery({
-  args: {
-    id: v.optional(v.id("servers")),
-  },
-  handler: async (ctx, { id }) => {
-    if (!id) {
-      throw new Error("No serever Id");
-    }
-    const server = await ctx.db.get(id);
-    if (!server) {
-      throw new Error("Server not found");
-    }
-    return server.defaultChannelId;
-  },
-});

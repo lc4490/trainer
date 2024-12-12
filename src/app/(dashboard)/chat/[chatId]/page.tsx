@@ -18,7 +18,7 @@ export default function HomePage({
       <header className="p-4">
         <h1 className="font-semibold">{chat?.name}</h1>
       </header>
-      <Messages id={chatId} />
+      <Messages id={chatId} ai_chat={true} />
     </div>
   );
 }

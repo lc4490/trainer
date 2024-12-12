@@ -40,8 +40,9 @@ export const create = authenticatedMutation({
     content: v.string(),
     attachment: v.optional(v.id("_storage")),
     dmOrChannelId: v.union(v.id("directMessages"), v.id("channels")),
+    ai_chat: v.optional(v.boolean()),
   },
-  handler: async (ctx, { content, attachment, dmOrChannelId }) => {
+  handler: async (ctx, { content, attachment, dmOrChannelId, ai_chat }) => {
     await assertChannelMember(ctx, dmOrChannelId);
     const messageId = await ctx.db.insert("messages", {
       content,
@@ -56,6 +57,9 @@ export const create = authenticatedMutation({
     await ctx.scheduler.runAfter(0, internal.functions.moderation.run, {
       id: messageId,
     });
+    if (ai_chat) {
+      console.log("ai");
+    }
   },
 });
 

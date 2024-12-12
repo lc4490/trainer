@@ -105,6 +105,7 @@ export const addProfilePicture = authenticatedMutation({
 export const setServer = authenticatedMutation({
   args: {
     server: v.optional(v.id("servers")),
+    channel: v.optional(v.id("channels")),
   },
   handler: async (ctx, args) => {
     // Get the current user
@@ -115,6 +116,7 @@ export const setServer = authenticatedMutation({
 
     await ctx.db.patch(currentUser._id, {
       server: args.server || currentUser.server,
+      defaultChannel: args.channel || currentUser.defaultChannel,
     });
   },
 });

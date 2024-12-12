@@ -24,7 +24,13 @@ import {
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 
-export function Messages({ id }: { id: Id<"directMessages" | "channels"> }) {
+export function Messages({
+  id,
+  ai_chat,
+}: {
+  id: Id<"directMessages" | "channels">;
+  ai_chat?: boolean;
+}) {
   const messages = useQuery(api.functions.message.list, {
     dmOrChannelId: id,
   });
@@ -36,7 +42,7 @@ export function Messages({ id }: { id: Id<"directMessages" | "channels"> }) {
         ))}
       </ScrollArea>
       <TypingIndicator id={id} />
-      <MessageInput id={id} />
+      <MessageInput id={id} ai_chat={ai_chat} />
     </>
   );
 }
@@ -119,7 +125,13 @@ function MessageActions({ message }: { message: Message }) {
   );
 }
 
-function MessageInput({ id }: { id: Id<"directMessages" | "channels"> }) {
+function MessageInput({
+  id,
+  ai_chat,
+}: {
+  id: Id<"directMessages" | "channels">;
+  ai_chat?: boolean;
+}) {
   const [content, setContent] = useState("");
   const sendMessage = useMutation(api.functions.message.create);
   const sendTypingIndicator = useMutation(api.functions.typing.upsert);
@@ -133,6 +145,7 @@ function MessageInput({ id }: { id: Id<"directMessages" | "channels"> }) {
         dmOrChannelId: id,
         attachment: imageUpload.storageId,
         content,
+        ai_chat,
       });
       setContent("");
       imageUpload.reset();

@@ -16,6 +16,7 @@ export default defineSchema({
     availability: v.optional(v.array(v.string())),
     profilePic: v.optional(v.id("_storage")),
     server: v.optional(v.id("servers")),
+    defaultChannel: v.optional(v.id("channels")),
   })
     .index("by_clerk_id", ["clerkId"])
     .index("by_username", ["username"]),

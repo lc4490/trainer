@@ -23,10 +23,9 @@ import { CreateServer } from "./create-server";
 export function MainSidebar() {
   const servers = useQuery(api.functions.server.list);
   const user = useQuery(api.functions.user.get);
-  const defaultChannelId = useQuery(api.functions.server.getDefaultChannel, {
-    id: user?.server,
-  });
+
   const pathname = usePathname();
+
   if (!user || user.age === undefined) {
     return <div></div>;
   }
@@ -64,7 +63,7 @@ export function MainSidebar() {
                   asChild
                   isActive={pathname.startsWith("/chat")}
                 >
-                  <Link href={`/chat/${defaultChannelId}`}>
+                  <Link href={`/chat/${user.defaultChannel}`}>
                     <BotMessageSquare />
                   </Link>
                 </SidebarMenuButton>

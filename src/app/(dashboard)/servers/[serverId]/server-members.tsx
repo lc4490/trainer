@@ -14,10 +14,12 @@ import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { CreateInvite } from "./create-invite";
+import { userAgent } from "next/server";
 
 export function ServerMembers({ id }: { id: Id<"servers"> }) {
   const members = useQuery(api.functions.server.members, { id });
   const server = useQuery(api.functions.server.get, { id });
+  const user = useQuery(api.functions.user.get);
   const removeServerMember = useMutation(
     api.functions.server.removeServerMember
   );
@@ -58,22 +60,26 @@ export function ServerMembers({ id }: { id: Id<"servers"> }) {
           {server?.ownerId === member._id ? (
             <CrownIcon className="text-muted-foreground" />
           ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <EllipsisVertical className="text-muted-foreground" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem asChild>
-                  <Button
-                    onClick={() => {
-                      handleRemoveMember(id, member._id);
-                    }}
-                  >
-                    Remove Member
-                  </Button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              {server?.ownerId === user?._id && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <EllipsisVertical className="text-muted-foreground" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <Button
+                        onClick={() => {
+                          handleRemoveMember(id, member._id);
+                        }}
+                      >
+                        Remove Member
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </>
           )}
         </div>
       ))}

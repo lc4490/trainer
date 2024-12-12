@@ -45,10 +45,10 @@ export default function Onboarding({ onClose }: { onClose: () => void }) {
   }) => {
     try {
       await onboard(formData);
-      const { serverId } = await createServer({
+      const { serverId, defaultChannelId } = await createServer({
         name: "trAIner",
       });
-      await setServer({ server: serverId });
+      await setServer({ server: serverId, channel: defaultChannelId });
 
       toast.success("Onboarding completed successfully!");
     } catch (error) {

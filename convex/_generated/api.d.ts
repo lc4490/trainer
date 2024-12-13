@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as functions_channels from "../functions/channels.js";
+import type * as functions_chat from "../functions/chat.js";
 import type * as functions_dm from "../functions/dm.js";
 import type * as functions_friend from "../functions/friend.js";
 import type * as functions_helpers from "../functions/helpers.js";
@@ -37,6 +38,7 @@ import type * as http from "../http.js";
  */
 declare const fullApi: ApiFromModules<{
   "functions/channels": typeof functions_channels;
+  "functions/chat": typeof functions_chat;
   "functions/dm": typeof functions_dm;
   "functions/friend": typeof functions_friend;
   "functions/helpers": typeof functions_helpers;

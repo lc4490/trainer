@@ -43,14 +43,21 @@ export const run = internalAction({
     ];
 
     const result = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "llama3-8b-8192",
       messages: formattedMessages.map((message) => ({
         role: message.role === user ? "user" : "assistant",
         content: message.content,
       })),
     });
-    const value = result.choices[0].message.content;
+    const value = result.choices[0].message.content
+      ? result.choices[0].message.content
+      : "";
     console.log(value);
+    await ctx.runMutation(internal.functions.chat.sendMessage, {
+      dmOrChannelId,
+      value,
+      user,
+    });
   },
 });
 
@@ -72,6 +79,14 @@ export const sendMessage = internalMutation({
   args: {
     dmOrChannelId: v.union(v.id("directMessages"), v.id("channels")),
     value: v.string(),
+    user: v.id("users"),
   },
-  handler: async (ctx, { dmOrChannelId, value }) => {},
+  handler: async (ctx, { dmOrChannelId, value, user }) => {
+    await ctx.db.insert("messages", {
+      content: value,
+      dmOrChannelId,
+      sender: user,
+      ai: true,
+    });
+  },
 });

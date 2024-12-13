@@ -57,12 +57,11 @@ export const create = authenticatedMutation({
     await ctx.scheduler.runAfter(0, internal.functions.moderation.run, {
       id: messageId,
     });
-    await ctx.scheduler.runAfter(0, internal.functions.chat.run, {
-      dmOrChannelId,
-      user: ctx.user._id,
-    });
     if (ai_chat) {
-      console.log("ai");
+      await ctx.scheduler.runAfter(0, internal.functions.chat.run, {
+        dmOrChannelId,
+        user: ctx.user._id,
+      });
     }
   },
 });

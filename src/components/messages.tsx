@@ -61,6 +61,81 @@ function TypingIndicator({ id }: { id: Id<"directMessages" | "channels"> }) {
 type Message = FunctionReturnType<typeof api.functions.message.list>[number];
 
 function MessageItem({ message }: { message: Message }) {
+  const user = useQuery(api.functions.user.get);
+  if (message.ai) {
+    return (
+      <div className="flex items-center px-4 gap-2 py-2">
+        <Avatar className="size-8 border">
+          {message.sender && <AvatarImage src={message.sender?.image} />}
+          <AvatarFallback />
+        </Avatar>
+        <div className="flex flex-col mr-auto">
+          <p className="text-xs text-muted-foreground">{"trAIner"}</p>
+          {message.deleted ? (
+            <>
+              <p className="text-sm text-destructive">
+                This message was deleted.
+                {message.deletedReason && (
+                  <span> Reason: {message.deletedReason}</span>
+                )}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm">{message.content}</p>
+              {message.attachment && (
+                <Image
+                  src={message.attachment}
+                  alt="attachment"
+                  width={300}
+                  height={300}
+                  className="rounded border overflow-hidden"
+                />
+              )}
+            </>
+          )}
+        </div>
+        <MessageActions message={message} />
+      </div>
+    );
+  }
+  if (user?._id === message.sender?._id) {
+    return (
+      <div className="flex items-center px-4 gap-2 py-2">
+        <MessageActions message={message} />
+        <div className="flex flex-col ml-auto text-right">
+          {/* <p className="text-xs text-muted-foreground">
+            {message.sender?.username ?? "Deleted User"}
+          </p> */}
+          {message.deleted ? (
+            <p className="text-sm text-destructive">
+              This message was deleted.
+              {message.deletedReason && (
+                <span> Reason: {message.deletedReason}</span>
+              )}
+            </p>
+          ) : (
+            <>
+              <p className="text-sm">{message.content}</p>
+              {message.attachment && (
+                <Image
+                  src={message.attachment}
+                  alt="attachment"
+                  width={300}
+                  height={300}
+                  className="rounded border overflow-hidden"
+                />
+              )}
+            </>
+          )}
+        </div>
+        <Avatar className="size-8 border">
+          {message.sender && <AvatarImage src={message.sender?.image} />}
+          <AvatarFallback />
+        </Avatar>
+      </div>
+    );
+  }
   return (
     <div className="flex items-center px-4 gap-2 py-2">
       <Avatar className="size-8 border">
@@ -72,14 +147,12 @@ function MessageItem({ message }: { message: Message }) {
           {message.sender?.username ?? "Deleted User"}
         </p>
         {message.deleted ? (
-          <>
-            <p className="text-sm text-destructive">
-              This message was deleted.
-              {message.deletedReason && (
-                <span> Reason: {message.deletedReason}</span>
-              )}
-            </p>
-          </>
+          <p className="text-sm text-destructive">
+            This message was deleted.
+            {message.deletedReason && (
+              <span> Reason: {message.deletedReason}</span>
+            )}
+          </p>
         ) : (
           <>
             <p className="text-sm">{message.content}</p>

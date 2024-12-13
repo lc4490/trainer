@@ -14,7 +14,6 @@ import { toast } from "sonner";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { CreateInvite } from "./create-invite";
-import { userAgent } from "next/server";
 
 export function ServerMembers({ id }: { id: Id<"servers"> }) {
   const members = useQuery(api.functions.server.members, { id });

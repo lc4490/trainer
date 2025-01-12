@@ -35,15 +35,17 @@ export function Messages({
     dmOrChannelId: id,
   });
   return (
-    <>
+    <div className="relative flex flex-col h-full">
       <ScrollArea className="h-full py-4">
         {messages?.map((message) => (
           <MessageItem key={message._id} message={message} />
         ))}
       </ScrollArea>
-      <TypingIndicator id={id} />
-      <MessageInput id={id} ai_chat={ai_chat} />
-    </>
+      <div className="sticky bottom-0 bg-background">
+        <TypingIndicator id={id} />
+        <MessageInput id={id} ai_chat={ai_chat} />
+      </div>
+    </div>
   );
 }
 function TypingIndicator({ id }: { id: Id<"directMessages" | "channels"> }) {
@@ -65,21 +67,19 @@ function MessageItem({ message }: { message: Message }) {
   if (message.ai) {
     return (
       <div className="flex items-center px-4 gap-2 py-2">
-        <Avatar className="size-8 border">
+        <Avatar className="size-8 border self-start">
           {message.sender && <AvatarImage src={message.sender?.image} />}
           <AvatarFallback />
         </Avatar>
         <div className="flex flex-col mr-auto">
           <p className="text-xs text-muted-foreground">{"trAIner"}</p>
           {message.deleted ? (
-            <>
-              <p className="text-sm text-destructive">
-                This message was deleted.
-                {message.deletedReason && (
-                  <span> Reason: {message.deletedReason}</span>
-                )}
-              </p>
-            </>
+            <p className="text-sm text-destructive">
+              This message was deleted.
+              {message.deletedReason && (
+                <span> Reason: {message.deletedReason}</span>
+              )}
+            </p>
           ) : (
             <>
               <p className="text-sm">{message.content}</p>

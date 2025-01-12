@@ -9,8 +9,7 @@ import { internal } from "../_generated/api";
 import OpenAI from "openai";
 
 const groq = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
 export const run = internalAction({
@@ -37,13 +36,12 @@ export const run = internalAction({
     const formattedMessages = [
       systemPrompt,
       ...messages.map((message) => ({
-        role: message.sender === user ? "user" : "assistant",
+        role: message.ai ? "asssistant" : "user",
         content: message.content,
       })),
     ];
-
     const result = await groq.chat.completions.create({
-      model: "llama3-8b-8192",
+      model: "gpt-4o-mini",
       messages: formattedMessages.map((message) => ({
         role: message.role === user ? "user" : "assistant",
         content: message.content,
@@ -52,7 +50,6 @@ export const run = internalAction({
     const value = result.choices[0].message.content
       ? result.choices[0].message.content
       : "";
-    console.log(value);
     await ctx.runMutation(internal.functions.chat.sendMessage, {
       dmOrChannelId,
       value,
